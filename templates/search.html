@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Students</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f4f6f9;
+        }
+        h2 {
+            color: #243b55;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+        }
+        button {
+            background: #243b55;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background: #243b55;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>Search Students</h2>
+
+    <form action="/search" method="GET">
+        <input type="text" name="q"
+               placeholder="Search name, email, or department"
+               value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if students %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+        </tr>
+        {% for student in students %}
+        <tr>
+            <td>{{ student['id'] }}</td>
+            <td>{{ student['name'] }}</td>
+            <td>{{ student['email'] or '' }}</td>
+            <td>{{ student['department'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% elif query %}
+        <p>No matching students found.</p>
+    {% endif %}
+
+    <p><a href="/">Back to Home</a></p>
+</body>
+</html>

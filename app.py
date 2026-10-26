@@ -1,6 +1,6 @@
-
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
+from database import get_db
 
 from registration import registration_bp
 from login import login_bp
@@ -85,6 +85,29 @@ def delete(id):
         )
 
     return redirect("/")
+
+# Week 8(b): Search students
+@app.route("/search", methods=["GET"])
+def search():
+    query = request.args.get("q", "").strip()
+
+    with get_db() as con:
+        students = con.execute(
+            """
+            SELECT id, name, email, department
+            FROM students
+            WHERE name LIKE ?
+               OR email LIKE ?
+               OR department LIKE ?
+            """,
+            (f"%{query}%", f"%{query}%", f"%{query}%")
+        ).fetchall()
+
+    return render_template(
+        "search.html",
+        students=students,
+        query=query
+    )
 
 
 if __name__ == "__main__":
